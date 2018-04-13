@@ -1,25 +1,24 @@
 package com.a99zan.sailingcourse.utils;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.webkit.ValueCallback;
+import android.widget.Toast;
 
-
-import com.a99zan.sailingcourse.dialog.ActionSheetDialog;
 import com.a99zan.sailingcourse.activity.BaseActivity;
 import com.a99zan.sailingcourse.activity.PreviewImgActivity;
+import com.a99zan.sailingcourse.dialog.ActionSheetDialog;
 
 import java.io.File;
 
 import static android.support.v4.content.FileProvider.getUriForFile;
-
-/**
- * Created by postmaster@teachcourse.cn on 2016/12/20.
- */
 
 public class PickPhotoUtil {
     private static final String TAG = "PickPhotoUtil";
@@ -33,6 +32,10 @@ public class PickPhotoUtil {
     public static final int REQUEST_CODE_PICK_PHOTO = 0x112;
     public static final int REQUEST_CODE_PREVIEW_PHOTO = 0x113;
     public static final int REQUEST_FILE_PICKER = 0x111;//请求调起文件管理器
+    /**
+     * Android 6.0以上版本，需求添加运行时权限申请；否则，可能程序崩溃
+     */
+    private static final int REQUEST_CODE_PERMISSION = 0x110;
     /**
      * 为什么需要设置声明两个ValueCallback对象？
      * mFilePathCallback，在Android 4.0以上API版本中被赋值，回调onShowFileChooser方法
@@ -56,14 +59,29 @@ public class PickPhotoUtil {
                         new ActionSheetDialog.OnSheetItemClickListener() {
                             @Override
                             public void onClick(int which) {
-                                goToTakePhoto();
+                                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                                        &&ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                                    goToTakePhoto();
+                                } else {
+                                    //申请权限
+                                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                                    Toast.makeText(activity, "拍照或SD卡权限被禁用，请在权限管理修改", Toast.LENGTH_SHORT).show();
+                                    cancelFilePathCallback();
+                                }
                             }
                         })
                 .addSheetItem("手机相册", ActionSheetDialog.SheetItemColor.Blue,
                         new ActionSheetDialog.OnSheetItemClickListener() {
                             @Override
                             public void onClick(int which) {
-                                goForPicFile();
+                                if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                                    goForPicFile();
+                                } else {
+                                    //申请权限
+                                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                                    Toast.makeText(activity, "SD卡权限被禁用，请在权限管理修改", Toast.LENGTH_SHORT).show();
+                                    cancelFilePathCallback();
+                                }
                             }
                         });
 //        actionSheetDialog.addSheetItem("图片预览", ActionSheetDialog.SheetItemColor.Blue,

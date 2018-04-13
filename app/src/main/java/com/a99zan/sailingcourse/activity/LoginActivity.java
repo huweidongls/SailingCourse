@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.webkit.JsResult;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.a99zan.sailingcourse.R;
 import com.a99zan.sailingcourse.utils.GetPathFromUri4kitkat;
@@ -30,16 +32,43 @@ public class LoginActivity extends BaseActivity {
 
     private WebView webView;
 
-    private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/" + SystemClock.currentThreadTimeMillis() + ".jpg");
-    private Uri imageUri;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         init();
+        initPermissionForCamera();
 
+    }
+
+    /**
+     * Android 6.0以上版本，需求添加运行时权限申请；否则，可能程序崩溃
+     */
+    private static final int REQUEST_CODE_PERMISSION = 0x110;
+    private void initPermissionForCamera() {
+        int flag = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        int flag1 = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (PackageManager.PERMISSION_GRANTED != flag||PackageManager.PERMISSION_GRANTED != flag1) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (REQUEST_CODE_PERMISSION == requestCode) {
+            switch (grantResults[0]) {
+                case PackageManager.PERMISSION_DENIED:
+                    boolean isSecondRequest = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA);
+                    boolean isSecondRequest1 = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    if (isSecondRequest||isSecondRequest1)
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
+                    else
+                        Toast.makeText(this, "拍照或SD卡权限被禁用，请在权限管理修改", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
     }
 
     private void init() {
@@ -81,7 +110,7 @@ public class LoginActivity extends BaseActivity {
         webSettings.setAllowFileAccess(true);    // 是否可访问本地文件，默认值 true
 
         //其他细节操作
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE); //关闭webview中缓存
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT); //关闭webview中缓存
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
         webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
         webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
@@ -176,18 +205,6 @@ public class LoginActivity extends BaseActivity {
 //                return true;
 //            }
         });
-
-        if (ActivityCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-        } else {
-            //申请权限
-            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        }
-
-        if (ActivityCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-        } else {
-            //申请权限
-            ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
-        }
 
     }
 
