@@ -109,7 +109,7 @@ public class LoginActivity extends BaseActivity {
         webSettings.setAllowFileAccess(true);    // 是否可访问本地文件，默认值 true
 
         //其他细节操作
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT); //关闭webview中缓存
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT); //webview中缓存模式
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
         webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
         webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
