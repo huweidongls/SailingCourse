@@ -25,11 +25,14 @@ import com.a99zan.sailingcourse.utils.PickPhotoUtil;
 
 import java.io.File;
 
+import ren.yale.android.cachewebviewlib.CacheWebView;
+import ren.yale.android.cachewebviewlib.WebViewCache;
+
 public class LoginActivity extends BaseActivity {
 
     private static final String TAG = "LoginActivity";
 
-    private WebView webView;
+    private CacheWebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +75,18 @@ public class LoginActivity extends BaseActivity {
 
     private void init() {
 
-        webView = (WebView) findViewById(R.id.webview);
+        webView = (CacheWebView) findViewById(R.id.webview);
 
         //声明WebSettings子类
         WebSettings webSettings = webView.getSettings();
+
+        /**
+         * 缓存策略
+         */
+        webView.setCacheStrategy(WebViewCache.CacheStrategy.FORCE);
+        webView.setBlockNetworkImage(true);
+        webView.setEnableCache(true);
+        webView.setUserAgent("Android");
 
         //如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
         webSettings.setJavaScriptEnabled(true);
@@ -84,14 +95,14 @@ public class LoginActivity extends BaseActivity {
 //        webSettings.setPluginsEnabled(true);
 
         //开启 database storage API 功能
-        webSettings.setDatabaseEnabled(true);
-        String cacheDirPath = getFilesDir().getAbsolutePath() + "cache";
+//        webSettings.setDatabaseEnabled(true);
+//        String cacheDirPath = getFilesDir().getAbsolutePath() + "cache";
         //设置数据库缓存路径
-        webSettings.setDatabasePath(cacheDirPath);
+//        webSettings.setDatabasePath(cacheDirPath);
         //设置  Application Caches 缓存目录
-        webSettings.setAppCachePath(cacheDirPath);
+//        webSettings.setAppCachePath(cacheDirPath);
         //开启 Application Caches 功能
-        webSettings.setAppCacheEnabled(true);
+//        webSettings.setAppCacheEnabled(true);
 
         //设置自适应屏幕，两者合用
         webSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小
@@ -109,7 +120,7 @@ public class LoginActivity extends BaseActivity {
         webSettings.setAllowFileAccess(true);    // 是否可访问本地文件，默认值 true
 
         //其他细节操作
-        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT); //webview中缓存模式
+//        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT); //webview中缓存模式
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
         webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
         webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式

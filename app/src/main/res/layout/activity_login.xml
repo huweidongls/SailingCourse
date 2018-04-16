@@ -6,9 +6,9 @@
     android:layout_height="match_parent"
     tools:context="com.a99zan.sailingcourse.activity.LoginActivity">
 
-    <WebView
+    <ren.yale.android.cachewebviewlib.CacheWebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></WebView>
+        android:layout_height="match_parent"></ren.yale.android.cachewebviewlib.CacheWebView>
 
 </RelativeLayout>
