@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -133,9 +134,15 @@ public class LoginActivity extends BaseActivity {
 //                }catch (Exception e){
 //                    return false;
 //                }
-                view.loadUrl(url);
-                Log.e("111", url + "");
-                return true;
+//                view.loadUrl(url);
+//                Log.e("111", url + "");
+//                return true;
+                //Android8.0以下的需要返回true 并且需要loadUrl；8.0之后效果相反
+                if(Build.VERSION.SDK_INT<26) {
+                    view.loadUrl(url);
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -206,11 +213,21 @@ public class LoginActivity extends BaseActivity {
 
     }
 
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
+//            webView.goBack();
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
             webView.goBack();
+            Log.e("1111", "2222");
             return true;
         }
+        Log.e("1111", "3333"+webView.canGoBack());
         return super.onKeyDown(keyCode, event);
     }
 
