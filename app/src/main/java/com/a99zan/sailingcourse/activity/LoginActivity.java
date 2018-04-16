@@ -75,7 +75,7 @@ public class LoginActivity extends BaseActivity {
 
     private void init() {
 
-        webView = (CacheWebView) findViewById(R.id.webview);
+        webView = (CacheWebView ) findViewById(R.id.webview);
 
         //声明WebSettings子类
         WebSettings webSettings = webView.getSettings();
@@ -84,9 +84,8 @@ public class LoginActivity extends BaseActivity {
          * 缓存策略
          */
         webView.setCacheStrategy(WebViewCache.CacheStrategy.FORCE);
-        webView.setBlockNetworkImage(true);
+//        webView.setBlockNetworkImage(true);
         webView.setEnableCache(true);
-        webView.setUserAgent("Android");
 
         //如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
         webSettings.setJavaScriptEnabled(true);
