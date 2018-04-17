@@ -128,22 +128,6 @@ public class LoginActivity extends BaseActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                try {
-//                    if (url.startsWith("tel")) {
-//                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(url));
-//                        if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-//                            startActivity(intent);
-//                            //这个超连接,java已经处理了，webview不要处理
-//                            return true;
-//                        }else{
-//                            //申请权限
-//                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE},1);
-//                            return true;
-//                        }
-//                    }
-//                }catch (Exception e){
-//                    return false;
-//                }
 //                view.loadUrl(url);
 //                Log.e("111", url + "");
 //                return true;
@@ -223,13 +207,6 @@ public class LoginActivity extends BaseActivity {
 
     }
 
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
-//            webView.goBack();
-//            return true;
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
