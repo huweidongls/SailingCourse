@@ -25,14 +25,11 @@ import com.a99zan.sailingcourse.utils.PickPhotoUtil;
 
 import java.io.File;
 
-import ren.yale.android.cachewebviewlib.CacheWebView;
-import ren.yale.android.cachewebviewlib.WebViewCache;
-
 public class LoginActivity extends BaseActivity {
 
     private static final String TAG = "LoginActivity";
 
-    private CacheWebView webView;
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +72,7 @@ public class LoginActivity extends BaseActivity {
 
     private void init() {
 
-        webView = (CacheWebView ) findViewById(R.id.webview);
+        webView = (WebView) findViewById(R.id.webview);
 
         //声明WebSettings子类
         WebSettings webSettings = webView.getSettings();
@@ -83,29 +80,30 @@ public class LoginActivity extends BaseActivity {
         /**
          * 缓存策略
          */
-        webView.setCacheStrategy(WebViewCache.CacheStrategy.FORCE);
-//        webView.setBlockNetworkImage(true);
-        webView.setEnableCache(true);
-
-        //如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
-        webSettings.setJavaScriptEnabled(true);
+//        webView.setCacheStrategy(WebViewCache.CacheStrategy.FORCE);
+////        webView.setBlockNetworkImage(true);
+//        webView.setEnableCache(true);
 
         //支持插件
 //        webSettings.setPluginsEnabled(true);
 
         //开启 database storage API 功能
-//        webSettings.setDatabaseEnabled(true);
-//        String cacheDirPath = getFilesDir().getAbsolutePath() + "cache";
+        webSettings.setDatabaseEnabled(true);
+        String cacheDirPath = getFilesDir().getAbsolutePath() + "cache";
         //设置数据库缓存路径
-//        webSettings.setDatabasePath(cacheDirPath);
+        webSettings.setDatabasePath(cacheDirPath);
         //设置  Application Caches 缓存目录
-//        webSettings.setAppCachePath(cacheDirPath);
+        webSettings.setAppCachePath(cacheDirPath);
         //开启 Application Caches 功能
-//        webSettings.setAppCacheEnabled(true);
+        webSettings.setAppCacheEnabled(true);
 
-        //设置自适应屏幕，两者合用
-        webSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小
-        webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
+        //支持javascript
+        webSettings.setJavaScriptEnabled(true);
+        //扩大比例的缩webSettings
+        webSettings.setUseWideViewPort(true);
+        //自适应屏幕 webSettings
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        webSettings.setLoadWithOverviewMode(true);
 
         //缩放操作
         webSettings.setSupportZoom(true); //支持缩放，默认为true。是下面那个的前提。
